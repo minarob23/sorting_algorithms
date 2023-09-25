@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "sort.h"
 
 /**
  * quick_sort - Sorts an array of integers in ascending order using Quick sort
@@ -56,7 +56,6 @@ int lomuto_partition(int *array, int low, int high, size_t size)
             array[i] = array[j];
             array[j] = temp;
 
-            // Print the array after each swap
             print_array(array, size);
         }
     }
@@ -65,7 +64,6 @@ int lomuto_partition(int *array, int low, int high, size_t size)
     array[i + 1] = array[high];
     array[high] = temp;
 
-    // Print the array after the final swap
     print_array(array, size);
 
     return (i + 1);
@@ -89,4 +87,3 @@ void print_array(int *array, size_t size)
     }
     printf("\n");
 }
-
