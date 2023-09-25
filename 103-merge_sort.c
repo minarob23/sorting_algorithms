@@ -1,132 +1,82 @@
 #include "sort.h"
-#include <stdlib.h>
-#include <stdio.h>
+
+void merge_subarr(int *subarr, int *buff, size_t front, size_t mid,
+		size_t back);
+void merge_sort_recursive(int *subarr, int *buff, size_t front, size_t back);
+void merge_sort(int *array, size_t size);
 
 /**
- * print_left_right - print left and right partitions
- * @array: array
- * @size: size of second array
- * @first: initial position
- * @mid: middle position
+ * merge_subarr - Sort a subarray of integers.
+ * @subarr: A subarray of an array of integers to sort.
+ * @buff: A buffer to store the sorted subarray.
+ * @front: The front index of the array.
+ * @mid: The middle index of the array.
+ * @back: The back index of the array.
  */
-void print_left_right(int *array, int size, int first, int mid)
+void merge_subarr(int *subarr, int *buff, size_t front, size_t mid,
+		size_t back)
 {
-	int k;
+	size_t i, j, k = 0;
 
-	printf("Merging...\n");
-	printf("[left]: ");
-	k = first;
-	while (k < mid)
-	{
-		if (k != mid - 1)
-			printf("%d, ", array[k]);
-		else
-			printf("%d\n", array[k]);
-		k++;
-	}
+	printf("Merging...\n[left]: ");
+	print_array(subarr + front, mid - front);
 
 	printf("[right]: ");
-	k = mid;
-	while (k < size)
-	{
-		if (k < size - 1)
-			printf("%d, ", array[k]);
-		else
-			printf("%d\n", array[k]);
-		k++;
-	}
-}
+	print_array(subarr + mid, back - mid);
 
-/**
- * merge - merge the values in the position of array
- * @array: first array
- * @size: size of second array
- * @cpy: copy of array
- * @first: initial position
- * @mid: middle position
- * first one of the second array
- */
-void merge(int *array, int size, int first, int mid, int *cpy)
-{
-	int i, j, k;
-
-	print_left_right(array, size, first, mid);
-
-	i = first;
-	j = mid;
+	for (i = front, j = mid; i < mid && j < back; k++)
+		buff[k] = (subarr[i] < subarr[j]) ? subarr[i++] : subarr[j++];
+	for (; i < mid; i++)
+		buff[k++] = subarr[i];
+	for (; j < back; j++)
+		buff[k++] = subarr[j];
+	for (i = front, k = 0; i < back; i++)
+		subarr[i] = buff[k++];
 
 	printf("[Done]: ");
-	k = first;
-	while (k < size)
+	print_array(subarr + front, back - front);
+}
+
+/**
+ * merge_sort_recursive - Implement the merge sort algorithm through recursion.
+ * @subarr: A subarray of an array of integers to sort.
+ * @buff: A buffer to store the sorted result.
+ * @front: The front index of the subarray.
+ * @back: The back index of the subarray.
+ */
+void merge_sort_recursive(int *subarr, int *buff, size_t front, size_t back)
+{
+	size_t mid;
+
+	if (back - front > 1)
 	{
-		if (i < mid && (j >= size || array[i] <= array[j]))
-		{
-			cpy[k] = array[i];
-			i++;
-		}
-		else
-		{
-			cpy[k] = array[j];
-			j++;
-		}
-		if (k < size - 1)
-			printf("%d, ", cpy[k]);
-		else
-			printf("%d\n", cpy[k]);
-		k++;
+		mid = front + (back - front) / 2;
+		merge_sort_recursive(subarr, buff, front, mid);
+		merge_sort_recursive(subarr, buff, mid, back);
+		merge_subarr(subarr, buff, front, mid, back);
 	}
 }
-/**
- * mergeSort - array separator
- * @cpy: copy of array
- * @first: initial position
- * @size: size of the original  array
- * @array: the original array
- */
-void mergeSort(int *cpy, int first, int size, int *array)
-{
-	int mid;
-
-	if (size - first < 2)
-		return;
-
-	mid = (size + first) / 2;
-
-	mergeSort(array, first, mid, cpy);
-	mergeSort(array, mid, size, cpy);
-
-	merge(cpy, size, first, mid, array);
-}
-/**
- * copy_array - copy array of int
- * @arr: array src
- * @cpy: array dest
- * @size : array size
- */
-void copy_array(int *arr, int *cpy, int size)
-{
-	int i;
-
-	for (i = 0; i < (int)size; i++)
-		cpy[i] = arr[i];
-}
 
 /**
- * merge_sort - create partition and copy
- * @array: array
- * @size : array size
+ * merge_sort - Sort an array of integers in ascending
+ *              order using the merge sort algorithm.
+ * @array: An array of integers.
+ * @size: The size of the array.
+ *
+ * Description: Implements the top-down merge sort algorithm.
  */
 void merge_sort(int *array, size_t size)
 {
-	int *cpy;
+	int *buff;
 
-	cpy = malloc(sizeof(int) * size - 1);
-
-	if (cpy == NULL)
+	if (array == NULL || size < 2)
 		return;
 
-	copy_array(array, cpy, size);
+	buff = malloc(sizeof(int) * size);
+	if (buff == NULL)
+		return;
 
-	mergeSort(cpy, 0, size, array);
-	free(cpy);
+	merge_sort_recursive(array, buff, 0, size);
+
+	free(buff);
 }
