@@ -1,7 +1,8 @@
-#include "sort.h"
+#include <stdio.h>
 
 /**
- * selection_sort - Sorts an array of integers in ascending order using Selection sort
+ * selection_sort - Sorts an array of integers in ascending order using
+ *                  Selection sort
  *
  * @array: The array to be sorted
  * @size: Number of elements in @array
@@ -12,6 +13,7 @@ void selection_sort(int *array, size_t size)
         return;
 
     size_t i, j, min_idx;
+    int temp;
 
     for (i = 0; i < size - 1; i++)
     {
@@ -25,13 +27,17 @@ void selection_sort(int *array, size_t size)
 
         if (min_idx != i)
         {
-            int temp = array[i];
+            temp = array[i];
             array[i] = array[min_idx];
             array[min_idx] = temp;
 
-            for (j = 0; j < size - 1; j++)
-                printf("%d, ", array[j]);
-            printf("%d\n", array[size - 1]);
+            for (j = 0; j < size; j++)
+            {
+                printf("%d", array[j]);
+                if (j < size - 1)
+                    printf(", ");
+            }
+            printf("\n");
         }
     }
 }
