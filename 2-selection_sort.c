@@ -31,14 +31,14 @@ void selection_sort(int *array, size_t size)
             temp = array[i];
             array[i] = array[min_idx];
             array[min_idx] = temp;
-
-            for (j = 0; j < size; j++)
-            {
-                printf("%d", array[j]);
-                if (j < size - 1)
-                    printf(", ");
-            }
-            printf("\n");
         }
+
+        for (j = 0; j < size; j++)
+        {
+            printf("%d", array[j]);
+            if (j < size - 1)
+                printf(", ");
+        }
+        printf("\n");
     }
 }
