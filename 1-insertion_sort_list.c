@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "sort.h"
 
 /**
@@ -34,7 +35,7 @@ void insertion_sort_list(listint_t **list)
             else
                 *list = current;
 
-            print_list(*list);
+            print_list(*list);  
 
             prev = current->prev;
         }
