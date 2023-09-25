@@ -12,40 +12,49 @@ void insertion_sort_list(listint_t **list)
     if (list == NULL || *list == NULL || (*list)->next == NULL)
         return;
 
-    listint_t *current, *sorted, *temp;
+    listint_t *sorted, *current;
 
-    current = (*list)->next;
+    sorted = (*list)->next;
 
-    while (current)
+    while (sorted)
     {
-        sorted = current->prev;
+        current = sorted;
+        sorted = sorted->next;
 
-        while (sorted && sorted->n > current->n)
-        {
-            temp = sorted->prev;
+        insert_sorted(list, current);  // Insert the current node into the sorted part
+        print_list(*list);            // Print the list after each insertion
+    }
+}
 
-            if (sorted->next)
-                sorted->next->prev = sorted;
+/**
+ * insert_sorted - Inserts a node into the sorted part of a linked list
+ *
+ * @list: Pointer to the head of the list
+ * @node: Node to be inserted
+ */
+void insert_sorted(listint_t **list, listint_t *node)
+{
+    listint_t *current;
 
-            sorted->next = current->next;
-            current->prev = sorted->prev;
-            sorted->prev = current;
+    if (*list == NULL || node->n <= (*list)->n)
+    {
+        node->next = *list;
+        node->prev = NULL;
+        if (*list)
+            (*list)->prev = node;
+        *list = node;
+    }
+    else
+    {
+        current = *list;
 
-            if (current->next)
-                current->next->prev = sorted;
+        while (current->next && current->next->n < node->n)
+            current = current->next;
 
-            current->next = sorted;
-
-            if (current->prev)
-                current->prev->next = current;
-            else
-                *list = current;
-
-            print_list(*list);
-
-            sorted = temp;
-        }
-
-        current = current->next;
+        node->next = current->next;
+        node->prev = current;
+        if (current->next)
+            current->next->prev = node;
+        current->next = node;
     }
 }
